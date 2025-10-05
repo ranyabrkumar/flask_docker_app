@@ -1,12 +1,18 @@
 # app/main.py
 
-from flask import Flask, render_template
+import os
+from flask import Flask, render_template, request
+from dotenv import load_dotenv
+
+# Load .env
+load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "default_key")
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def home():
+    if request.method == "POST":
+        username = request.form.get("username")
+        return render_template("result.html", username=username)
     return render_template("index.html")
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
