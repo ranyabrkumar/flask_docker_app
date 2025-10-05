@@ -106,5 +106,94 @@ docker build -t flask-docker-app .
 
 # Run the Container
 ```
-docker run -p 5000:5000 flask-docker-app
+docker run -p 8000:8000 flask-docker-app
 ```
+<img width="1673" height="395" alt="image" src="https://github.com/user-attachments/assets/e8cb0fc0-5245-47af-9fc1-692bcf292205" />
+
+# Use Environment Variables for Configuration
+## Rebuild image
+```docker build -t flask-docker-app .```
+
+<img width="1210" height="574" alt="image" src="https://github.com/user-attachments/assets/dfe156ae-a58f-4456-a56d-e7cf7da527d1" />
+
+## Run container with .env variables passed in
+```docker run -d --env-file .env -p 80:5000 flask-docker-app```
+# Docker Compose Integration
+## Update main.py to Handle Form Input
+```
+# app/main.py
+
+import os
+from flask import Flask, render_template, request
+from dotenv import load_dotenv
+
+# Load .env
+load_dotenv()
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "default_key")
+
+@app.route('/', methods=["GET", "POST"])
+def home():
+    if request.method == "POST":
+        username = request.form.get("username")
+        return render_template("result.html", username=username)
+    return render_template("index.html")
+```
+## Update index.html with a Form
+```
+<!-- app/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Your Name</h1>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Your name" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
+```
+## Create result.html to Show Form Output
+```
+<!-- app/templates/result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hello, {{ username }}! 👋</h1>
+        <a href="/">Go Back</a>
+    </div>
+</body>
+</html>
+```    
+
+## Create docker-compose.yml
+```
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: flask_app
+    ports:
+      - "80:5000"
+    env_file:
+      - .env
+    restart: unless-stopped
+```
+
+```docker compose up --build -d```
+<img width="1420" height="412" alt="image" src="https://github.com/user-attachments/assets/7f4804dc-1b31-4c74-8725-c6e90a9203dd" />
