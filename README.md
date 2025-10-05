@@ -111,6 +111,13 @@ docker run -p 8000:8000 flask-docker-app
 <img width="1673" height="395" alt="image" src="https://github.com/user-attachments/assets/e8cb0fc0-5245-47af-9fc1-692bcf292205" />
 
 # Use Environment Variables for Configuration
+## add .env file
+```
+FLASK_ENV=development
+FLASK_DEBUG=True
+FLASK_PORT=5000
+SECRET_KEY=my_very_secret_key
+```
 ## Rebuild image
 ```docker build -t flask-docker-app .```
 
