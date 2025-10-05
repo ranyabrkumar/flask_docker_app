@@ -1,0 +1,16 @@
+/* app/static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fc;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #ccc;
+    padding: 30px;
+    max-width: 600px;
+    margin: auto;
+}
